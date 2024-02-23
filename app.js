@@ -6,6 +6,8 @@ const childRoute = require('./Route/childRoute');
 const classRoute =require("./Route/classRoute")
 const mongoose = require('mongoose');
 require("dotenv").config();
+const upload = require("./middlewares/imageMiddleware");
+const { insertTeacher } = require('./Controller/teacherController');
 //create server
 const server=express();
 
@@ -24,9 +26,15 @@ mongoose
 
 
 //----------------------------------------settings
-server.use(express.json())
+server.use(express.json());
 server.use(cors());
 server.use(morgan("dev"));
+
+
+//teacher register
+server.post("/teachers",upload.single("image"),insertTeacher)
+
+
 
 
 //routes

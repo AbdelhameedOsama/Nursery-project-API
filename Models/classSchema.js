@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 //  const {autoInc} = require("auto-increment-group")
 
-const Schema = new mongoose.Schema({
+const classSchema = new mongoose.Schema({
   _id:{
     type:Number
   },
@@ -10,7 +10,7 @@ const Schema = new mongoose.Schema({
     required: true
   },
   supervisor:{
-    type: mongoose.objectId,
+    type: mongoose.ObjectId,
     ref: "Teacher",
     unique: true
   },children:{
@@ -29,4 +29,4 @@ const Schema = new mongoose.Schema({
 //     unique: true
 // });
 
-module.exports = mongoose.model('Classes', Schema);
+module.exports = mongoose.model('Class', classSchema);

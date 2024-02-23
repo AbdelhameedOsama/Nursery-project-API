@@ -36,26 +36,35 @@ exports.insertChild=(req,res,next)=>{
         })
 }
 
+
+
+
+
 exports.updateChild = (req, res, next) => {
-    const id = req.params.id;
-    const updatedData = req.body;
-    Child.updateOne({ _id: id }, updatedData)
-        .then(() => {
-            res.status(200).json({ message: "Child data updated successfully" });
-        })
-        .catch((error) => {
-            next(error);
+
+    Child.findByIdAndUpdate(req.body._id, req.body, { new: true })
+    .then((child) => {
+        res.status(200).json({
+            message: "Child updated successfully",
+            child
         });
+    })
+    .catch((error) => {
+        next(error);
+    });
 }
 
 
 exports.deleteChild = (req, res, next) => {
-    const id = req.params.id;
-    Child.deleteOne({ _id: id })
-        .then(() => {
-            res.status(200).json({ message: "Child deleted successfully" });
-        })
-        .catch((error) => {
-            next(error);
+
+    Child.findByIdAndDelete(req.body._id)
+    .then((child) => {
+        res.status(200).json({
+            message: "Child deleted successfully",
+            child
         });
+    })
+    .catch((error) => {
+        next(error);
+    });
 }

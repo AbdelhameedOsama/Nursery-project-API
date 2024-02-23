@@ -3,13 +3,16 @@ const Controller = require('./../Controller/child.controller');
 const router=express.Router();
 
 
-router.route("/children")
+router.route("/child")
         .get(Controller.getAllChilren)
         .post(Controller.insertChild)
+        .patch(Controller.updateChild)
+        .delete(Controller.deleteChild)
         
-router.get("/children/:id",Controller.getChildById)
-router.patch("/children/:id",Controller.updateChild)
-router.delete("/children/:id",Controller.deleteChild)
+
+
+router.get("/child/:id",Controller.getChildById)
+
 
 
 

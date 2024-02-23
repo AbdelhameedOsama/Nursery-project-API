@@ -2,14 +2,16 @@ const express = require('express');
 const controller=require('./../Controller/classController')
 const router=express.Router();
 
-router.route("/classes")
+router.route("/class")
         .get(controller.getAllClasses)
-        .post(controller.insertClass);
-router.get("/classes/children",controller.classChildren)
-router.get("/classes/supervisor",controller.classSupervisor)
-router.get("/classes/:id",controller.getClassById)
-router.patch("/classes/:id",controller.updateClass)
-router.delete("/classes/:id",controller.deleteClass)
+        .post(controller.insertClass)
+        .delete(controller.deleteClass)
+        .patch(controller.updateClass)
+
+router.get("/class/children",controller.classChildren)
+router.get("/class/supervisor",controller.classSupervisor)
+router.get("/class/:id",controller.getClassById)
+
 
 
 

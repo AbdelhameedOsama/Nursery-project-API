@@ -8,10 +8,10 @@ const teacherSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true
+    required: true  
   },
   email: {
-    type: Number,
+    type: String,
     required: true,
     unique :true
   },
@@ -19,7 +19,8 @@ const teacherSchema = new mongoose.Schema({
     type: String ,
     required : true
   }
-});
+},
+);
 
 
 //auto increment

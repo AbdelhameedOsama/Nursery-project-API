@@ -5,15 +5,14 @@ const router=express.Router();
 
 router.route("/teachers")
     .get(controller.getAllTeachers)
-    .post(controller.insertTeacher);
+    .patch(controller.updateTeacher)
+    .delete(controller.deleteTeacher)
 
 router.get("/teachers/supervisors",controller.getSupervisors)
 
 router.get("/teachers/:id",controller.getTeacherById)
 
-router.patch("/teachers/:id",controller.updateTeacher)
 
-router.delete("/teachers/:id",controller.deleteTeacherById)
 
 
 
