@@ -1,6 +1,8 @@
+const Teacher=require("../Models/teacherSchema")
+
 exports.getAllTeachers=(req,res,next)=>{
-    console.log("allTeachers");
-    res.status(200).json({data:[{},{},{}]})
+    
+    
 }
 
 exports.getTeacherById=(req,res,next)=>{
