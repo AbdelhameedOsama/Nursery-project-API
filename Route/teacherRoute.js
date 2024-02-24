@@ -22,6 +22,99 @@ router.get("/teachers/:id",isAdmin,paramValidate, validator,controller.getTeache
 
 
 
+/**
+ * @swagger
+ * /teachers:
+ *   get:
+ *     summary: Get all teachers
+ *     tags:
+ *       - Teachers
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ *   patch:
+ *     summary: Update a teacher
+ *     tags:
+ *       - Teachers
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Teacher'
+ *     responses:
+ *       200:
+ *         description: Success
+ *   delete:
+ *     summary: Delete a teacher
+ *     tags:
+ *       - Teachers
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+
+/**
+ * @swagger
+ * /teachers/supervisors:
+ *   get:
+ *     summary: Get supervisors
+ *     tags:
+ *       - Teachers
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+
+/**
+ * @swagger
+ * /teachers/changePassword:
+ *   put:
+ *     summary: Change teacher's password
+ *     tags:
+ *       - Teachers
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ChangePassword'
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+
+/**
+ * @swagger
+ * /teachers/{id}:
+ *   get:
+ *     summary: Get a teacher by ID
+ *     tags:
+ *       - Teachers
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+
+module.exports = router;
 
 
 module.exports=router;

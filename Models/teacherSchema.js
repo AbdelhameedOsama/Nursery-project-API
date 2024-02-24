@@ -23,14 +23,4 @@ const teacherSchema = new mongoose.Schema({
 );
 
 
-//auto increment
-
-// Schema.plugin(autoInc, {
-//     field: "id",
-//     startAt: 1,
-//     unique: true
-// });
-
-//export
-
 module.exports = mongoose.model('Teacher', teacherSchema);
