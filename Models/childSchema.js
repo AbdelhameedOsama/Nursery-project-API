@@ -40,8 +40,11 @@ const childSchema = new mongoose.Schema(
         required: true,
         enum: ["PreKG", "KG1", "KG2"], // Level must be one of these values
       },
-      address: addressSchema, // Include Address as a sub-document
-
+      address: addressSchema, // Include Address as a sub-document 
+  image:{
+    type: String ,
+    required : true
+  }
     },
   );
   

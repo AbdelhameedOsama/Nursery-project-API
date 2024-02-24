@@ -1,6 +1,7 @@
 const Teacher=require("../Models/teacherSchema")
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 
 
 exports.getAllTeachers=(req,res,next)=>{
@@ -24,64 +25,92 @@ exports.getTeacherById=(req,res,next)=>{
     });
 }
 
-exports.insertTeacher = async(req, res, next) => {
-    
+exports.insertTeacher = (req, res, next) => {
+        
+        const imagePath = req.file.path;
+
+        const { fullName, email, password } = req.body;
+        bcrypt.hash(password, 10)
+            .then((hashedPass) => {
+                const teacher = new Teacher({
+                    fullName,
+                    email,
+                    password: hashedPass,
+                    image: imagePath,
+                });
+                return teacher.save();
+            })
+            .then((newTeacherData) => {
+                const token = jwt.sign(
+                    {
+                        id: newTeacherData._id,
+                        fullName: newTeacherData.fullName,
+                        role: "teacher",
+                    },
+                    process.env.SECRET_KEY,
+                    { expiresIn: "1h" }
+                );
+                res.status(201).json({ newTeacherData, token, message: "Teacher added successfully" });
+            })
+            .catch((error) => {
+                next(error);
+            });
+}
+
+exports.updateTeacher = (req, res, next) => {
+    const teacherId = req.body._id;
     const imagePath = req.file.path;
 
-    const { fullName, email, password } = req.body;
-    try {
-      const hashedPass = await bcrypt.hash(password, 10);
-      const teacher = new Teacher({
-        fullName,
-        email,
-        password: hashedPass,
-        image: imagePath,
-      });
-      const newTeacherData = await teacher.save();
-      const token = jwt.sign(
-        {
-          id: newTeacherData._id,
-          fullName: newTeacherData.fullName,
-          role: "teacher",
-        },
-        process.env.SECRET_KEY,
-        { expiresIn: "1h" }
-      );
-      res.status(201).json({ newTeacherData, token, message: "Teacher added successfully" });
-    } catch (error) {
-      next(error);
-    }
+    Teacher.findById(teacherId)
+        .then((teacher) => {
+            if (!teacher) {
+                throw new Error("teacher not found");
+            }
 
+            // Delete the previous image file
+            fs.unlink(teacher.image, (error) => {
+                if (error) {
+                    console.error("Error deleting previous image:", error);
+                }
+            });
+
+            // Update the child document with new image path
+            teacher.image = imagePath;
+
+            return teacher.save();
+        })
+        .then((updatedteacher) => {
+            res.status(200).json({
+                message: "teacher updated successfully",
+                teacher: updatedteacher
+            });
+        })
+        .catch((error) => {
+            next(error);
+        });
 }
 
-
-
-
-
-exports.updateTeacher=(req,res,next)=>{
-    Teacher.findByIdAndUpdate(req.body._id, req.body, { new: true })
-    .then((teacher) => {
-        res.status(200).json({
-            message: "Teacher updated successfully",
-            teacher
+exports.deleteTeacher = (req, res, next) => {
+    const teacherId = req.body._id;
+    Teacher.findByIdAndDelete(teacherId)
+        .then((teacher) => {
+            if (!teacher) {
+                throw new Error("Teacher not found");
+            }
+            // Delete the image file
+            fs.unlink(teacher.image, (error) => {
+                if (error) {
+                    console.error("Error deleting image:", error);
+                }
+            });
+            res.status(200).json({
+                message: "Teacher deleted successfully",
+                teacher
+            });
+        })
+        .catch((error) => {
+            next(error);
         });
-    })
-    .catch((error) => {
-        next(error);
-    });
-}
-
-exports.deleteTeacher=(req,res,next)=>{
-    Teacher.findByIdAndDelete(req.body._id)
-    .then((teacher) => {
-        res.status(200).json({
-            message: "Teacher deleted successfully",
-            teacher
-        });
-    })
-    .catch((error) => {
-        next(error);
-    });
 }
 
 exports.getSupervisors=(req,res,next)=>{

@@ -1,4 +1,5 @@
 const Child= require("../Models/childSchema")
+const fs = require('fs');
 
 
 exports.getAllChilren=(req,res,next)=>{
@@ -23,48 +24,88 @@ exports.getChildById=(req,res,next)=>{
     });
 }
 
-exports.insertChild=(req,res,next)=>{
-    const child=new Child (req.body);
-    child.save()
-        .then((child)=>{
-            res.status(201).json({
-                message:"child added successfuly",
-                child
-            })
-        }).catch((error)=>{
-            next(error);
-        })
+exports.insertChild=async (req,res,next)=>{
+    const imagePath = req.file.path;
+    const {_id, fullName, age, level,city,street,building } = req.body;
+    
+    const address={city,street,building}
+    try {
+      const child = new Child({
+        _id,
+        fullName,
+        age,
+        level,
+        address,
+        image: imagePath,
+      });
+      const newChildData = await child.save();
+      res.status(201).json({ newChildData, message: "Child added successfully" });
+    } catch (error) {
+      next(error);
+    }
 }
 
 
-
-
-
 exports.updateChild = (req, res, next) => {
+    const childId = req.body._id;
+    const imagePath = req.file.path;
 
-    Child.findByIdAndUpdate(req.body._id, req.body, { new: true })
-    .then((child) => {
-        res.status(200).json({
-            message: "Child updated successfully",
-            child
+    Child.findById(childId)
+        .then((child) => {
+            if (!child) {
+                throw new Error("Child not found");
+            }
+
+            // Delete the previous image file
+            fs.unlink(child.image, (error) => {
+                if (error) {
+                    console.error("Error deleting previous image:", error);
+                }
+            });
+
+            // Update the child document with new image path
+            child.image = imagePath;
+
+            return child.save();
+        })
+        .then((updatedChild) => {
+            res.status(200).json({
+                message: "Child updated successfully",
+                child: updatedChild
+            });
+        })
+        .catch((error) => {
+            next(error);
         });
-    })
-    .catch((error) => {
-        next(error);
-    });
 }
 
 
 exports.deleteChild = (req, res, next) => {
+    const childId = req.body._id;
 
-    Child.findByIdAndDelete(req.body._id)
-    .then((child) => {
-        res.status(200).json({
-            message: "Child deleted successfully",
-            child
+    Child.findById(childId)
+        .then((child) => {
+            if (!child) {
+                throw new Error("Child not found");
+            }
+
+            // Delete the image file
+            fs.unlink(child.image, (error) => {
+                if (error) {
+                    console.error("Error deleting image:", error);
+                }
+            });
+
+            // Delete the child document
+            return Child.findByIdAndDelete(childId);
+        })
+        .then((deletedChild) => {
+            res.status(200).json({
+                message: "Child deleted successfully",
+                child: deletedChild
+            });
+        })
+        .catch((error) => {
+            next(error);
         });
-    })
-    .catch((error) => {
-        next(error);
-    });
 }

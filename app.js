@@ -29,10 +29,10 @@ mongoose
 server.use(express.json());
 server.use(cors());
 server.use(morgan("dev"));
-
+server.use(upload.single("image"));
 
 //teacher register
-server.post("/teachers",upload.single("image"),insertTeacher)
+server.post("/teachers",insertTeacher)
 
 
 

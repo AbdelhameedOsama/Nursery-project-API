@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-//  const {autoInc} = require("auto-increment-group")
 
 const classSchema = new mongoose.Schema({
   _id:{
@@ -21,12 +20,5 @@ const classSchema = new mongoose.Schema({
 });
 
 
-//auto increment
-
-// Schema.plugin(autoInc, {
-//     field: "_id",
-//     startAt: 1,
-//     unique: true
-// });
 
 module.exports = mongoose.model('Class', classSchema);
