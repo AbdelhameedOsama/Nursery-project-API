@@ -12,6 +12,8 @@ const {bodyValidate} = require("./middlewares/Validation/teacherValidation");
 const validator = require("./middlewares/Validation/validator");
 const authenticateRoute=require("./Route/authenticateRoute");
 const authorization= require("./middlewares/Validation/authorizationMW");
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 
 //create server
 const server=express();
@@ -35,6 +37,7 @@ server.use(express.json());
 server.use(cors());
 server.use(morgan("dev"));
 server.use(upload.single("image"));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 //teacher register
 server.post("/teachers",bodyValidate, validator,insertTeacher)
