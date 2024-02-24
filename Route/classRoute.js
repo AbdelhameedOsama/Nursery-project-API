@@ -1,7 +1,7 @@
 const express = require('express');
 const controller=require('./../Controller/classController')
 const router=express.Router();
-const {bodyValidate, paramValidate} = require("../middlewares/Validation/childValidator");
+const {bodyValidate, paramValidate} = require("../middlewares/Validation/classValidator");
 const validator = require("../middlewares/Validation/validator");
 const{isAdmin}=require("../middlewares/Validation/authorizationMW")
 
