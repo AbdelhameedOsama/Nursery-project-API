@@ -7,9 +7,12 @@ const classRoute =require("./Route/classRoute")
 const mongoose = require('mongoose');
 require("dotenv").config();
 const upload = require("./middlewares/imageMiddleware");
-const { insertTeacher } = require('./Controller/teacherController');
-const {bodyValidate, paramValidate} = require("./middlewares/Validation/childValidator");
+const { insertTeacher,insertNewAdmin } = require('./Controller/teacherController');
+const {bodyValidate} = require("./middlewares/Validation/teacherValidation");
 const validator = require("./middlewares/Validation/validator");
+const authenticateRoute=require("./Route/authenticateRoute");
+const authorization= require("./middlewares/Validation/authorizationMW");
+
 //create server
 const server=express();
 
@@ -36,9 +39,11 @@ server.use(upload.single("image"));
 //teacher register
 server.post("/teachers",bodyValidate, validator,insertTeacher)
 
+//authentication
+server.use(authenticateRoute);
 
-
-
+//authorization
+server.use(authorization);
 //routes
 
 server.use(teacherRoute);

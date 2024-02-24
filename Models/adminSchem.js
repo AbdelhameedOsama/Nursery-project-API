@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 // const {autoInc} = require("auto-increment-group")
 
 const Schema = new mongoose.Schema({
-  username: {
+  email: {
     type: String,
     required: true
   },

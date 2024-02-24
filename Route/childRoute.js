@@ -3,12 +3,13 @@ const Controller = require('./../Controller/child.controller');
 const router=express.Router();
 const {bodyValidate, paramValidate} = require("../middlewares/Validation/childValidator");
 const validator = require("../middlewares/Validation/validator");
+const{isAdmin}=require("../middlewares/Validation/authorizationMW")
 
 router.route("/child")
         .get(Controller.getAllChilren)
-        .post(bodyValidate, validator,Controller.insertChild)
-        .patch(bodyValidate, validator,Controller.updateChild)
-        .delete(Controller.deleteChild)
+        .post(isAdmin, bodyValidate, validator,Controller.insertChild)
+        .patch(isAdmin,bodyValidate, validator,Controller.updateChild)
+        .delete(isAdmin,Controller.deleteChild)
 
 router.get("/child/:id",paramValidate, validator,Controller.getChildById)
 

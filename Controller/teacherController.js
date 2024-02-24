@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const Class=require("../Models/classSchema")
+// const Admin =require("../Models/adminSchem")
 
 exports.getAllTeachers=(req,res,next)=>{
     Teacher.find().then((teacher)=>{
@@ -24,6 +25,39 @@ exports.getTeacherById=(req,res,next)=>{
     next(error); //this will be caught by the error middleware
     });
 }
+
+
+// exports.insertNewAdmin = (req, res, next) => {
+//     const { email, password } = req.body;
+//     const hashedPass = bcrypt.hashSync(password, 10);
+//     const admin = new Admin({ email: email, password: hashedPass});
+
+//     admin
+//         .save()
+//         .then((admin) => {
+//             const token = jwt.sign(
+//                 {
+//                     id: admin._id,
+//                     fullname: admin.fullName,
+//                     role: "admin",
+//                 },
+//                 process.env.SECRET_KEY,
+//                 { expiresIn: "1h" }
+//             );
+//             res.status(201).json({
+//                 message: "Admin added successfully",
+//                 admin,
+//                 token
+//             });
+//         })
+//         .catch((error) => {
+//             next(error);
+//         });
+// };
+
+
+
+
 
 exports.insertTeacher = (req, res, next) => {
         
