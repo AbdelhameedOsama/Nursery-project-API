@@ -8,6 +8,8 @@ const mongoose = require('mongoose');
 require("dotenv").config();
 const upload = require("./middlewares/imageMiddleware");
 const { insertTeacher } = require('./Controller/teacherController');
+const {bodyValidate, paramValidate} = require("./middlewares/Validation/childValidator");
+const validator = require("./middlewares/Validation/validator");
 //create server
 const server=express();
 
@@ -32,7 +34,7 @@ server.use(morgan("dev"));
 server.use(upload.single("image"));
 
 //teacher register
-server.post("/teachers",insertTeacher)
+server.post("/teachers",bodyValidate, validator,insertTeacher)
 
 
 

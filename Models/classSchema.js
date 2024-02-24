@@ -3,7 +3,8 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const classSchema = new mongoose.Schema({
   _id:{
-    type:Number
+    type:Number,
+    unique:true
   },
   name: {
     type: String,
@@ -18,8 +19,7 @@ const classSchema = new mongoose.Schema({
     ref: "Child",
     unique: true
   }
-});
-
+},{_id:false});
 
 
 classSchema.plugin(AutoIncrement, { id: "class_Id", inc_field: "_id" });

@@ -1,21 +1,15 @@
 const express = require('express');
 const Controller = require('./../Controller/child.controller');
 const router=express.Router();
-const upload=require("../middlewares/imageMiddleware")
+const {bodyValidate, paramValidate} = require("../middlewares/Validation/childValidator");
+const validator = require("../middlewares/Validation/validator");
 
 router.route("/child")
         .get(Controller.getAllChilren)
-        .post(Controller.insertChild)
-        .patch(Controller.updateChild)
+        .post(bodyValidate, validator,Controller.insertChild)
+        .patch(bodyValidate, validator,Controller.updateChild)
         .delete(Controller.deleteChild)
-        
 
-
-router.get("/child/:id",Controller.getChildById)
-
-
-
-
-
+router.get("/child/:id",paramValidate, validator,Controller.getChildById)
 
 module.exports=router
