@@ -2,7 +2,7 @@ const Teacher=require("../Models/teacherSchema")
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
-
+const Class=require("../Models/classSchema")
 
 exports.getAllTeachers=(req,res,next)=>{
     Teacher.find().then((teacher)=>{
@@ -66,14 +66,12 @@ exports.updateTeacher = (req, res, next) => {
             if (!teacher) {
                 throw new Error("teacher not found");
             }
-
             // Delete the previous image file
             fs.unlink(teacher.image, (error) => {
                 if (error) {
                     console.error("Error deleting previous image:", error);
                 }
             });
-
             // Update the child document with new image path
             teacher.image = imagePath;
 
@@ -89,7 +87,6 @@ exports.updateTeacher = (req, res, next) => {
             next(error);
         });
 }
-
 exports.deleteTeacher = (req, res, next) => {
     const teacherId = req.body._id;
     Teacher.findByIdAndDelete(teacherId)
@@ -112,8 +109,13 @@ exports.deleteTeacher = (req, res, next) => {
             next(error);
         });
 }
-
-exports.getSupervisors=(req,res,next)=>{
-    console.log("supervisors");
-    res.status(200).json({data:[{},{},{},{},{}]})
-}
+exports.getSupervisors = (req, res, next) => {
+    Class.find({}, { supervisor: 1 })
+        .populate("supervisor", "name")
+        .then((teachers) => {
+            res.status(200).json(teachers);
+        })
+        .catch((error) => {
+            next(error);
+        });
+};

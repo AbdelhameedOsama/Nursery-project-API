@@ -9,13 +9,13 @@ exports.getAllClasses=(req,res,next)=>{
 }
 exports.getClassById=(req,res,next)=>{
     const id = req.params.id;
-    Class.findById({ _id: id }) //returns a promise
+    Class.findById({ _id: id })
     .then((classes) => {
-    if (!classes) throw new Error("Id does not exist"); //this will be caught by catch block
+    if (!classes) throw new Error("Id does not exist"); 
     res.status(200).json(classes);
     })
     .catch((error) => {
-    next(error); //this will be caught by the error middleware
+    next(error); 
     });
 }
 exports.insertClass=(req,res,next)=>{
@@ -54,11 +54,50 @@ exports.deleteClass=(req,res,next)=>{
         next(error);
     });
 }
-exports.classChildren=(req,res,next)=>{
-    console.log("getting class childern");
-    res.status(200).json({data:{id:req.params.id}})
+exports.classChildren = (req, res, next) => {
+    const _id = req.params._id;
+    Class.findById(req.params["id"])
+    .then((c) => {
+            if (!c) throw new Error("Id does not exist");
+            res.status(200).json(c.children);
+        })
+        .catch((error) => {
+            next(error);
+        });
 }
 exports.classSupervisor=(req,res,next)=>{
-    console.log("getting class supervisor");
-    res.status(200).json({data:"supervisor"})
+    const _id = req.params._id;
+    Class.findById(req.params["id"])
+    .then((c) => {
+            if (!c) throw new Error("Id does not exist");
+            res.status(200).json(c.supervisor);
+        })
+        .catch((error) => {
+            next(error);
+        });
 }
+
+
+// exports.getStudentByClassId = (req, res, next) => {
+//     const _id = req.params._id;
+//     Class.findById({ _id: _id })
+//         .then((c) => {
+//             if (!c) throw new Error("Id does not exist");
+//             res.status(200).json(c.children);
+//         })
+//         .catch((error) => {
+//             next(error);
+//         });
+// };
+
+// exports.getTeacherByClassId = (req, res, next) => {
+//     const _id = req.params._id;
+//     Class.findById({ _id: _id })
+//         .then((c) => {
+//             if (!c) throw new Error("Id does not exist");
+//             res.status(200).json(c.supervisor);
+//         })
+//         .catch((error) => {
+//             next(error);
+//         });
+// };

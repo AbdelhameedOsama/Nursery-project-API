@@ -8,8 +8,8 @@ router.route("/class")
         .delete(controller.deleteClass)
         .patch(controller.updateClass)
 
-router.get("/class/children",controller.classChildren)
-router.get("/class/supervisor",controller.classSupervisor)
+router.get("/class/child/:id",controller.classChildren)
+router.get("/class/teacher/:id",controller.classSupervisor)
 router.get("/class/:id",controller.getClassById)
 
 
