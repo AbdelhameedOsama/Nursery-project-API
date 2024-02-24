@@ -54,17 +54,6 @@ exports.deleteClass=(req,res,next)=>{
         next(error);
     });
 }
-exports.classChildren = (req, res, next) => {
-    const _id = req.params._id;
-    Class.findById(req.params["id"])
-    .then((c) => {
-            if (!c) throw new Error("Id does not exist");
-            res.status(200).json(c.children);
-        })
-        .catch((error) => {
-            next(error);
-        });
-}
 exports.classSupervisor=(req,res,next)=>{
     const _id = req.params._id;
     Class.findById(req.params["id"])
@@ -76,28 +65,25 @@ exports.classSupervisor=(req,res,next)=>{
             next(error);
         });
 }
-
-
-// exports.getStudentByClassId = (req, res, next) => {
-//     const _id = req.params._id;
-//     Class.findById({ _id: _id })
-//         .then((c) => {
-//             if (!c) throw new Error("Id does not exist");
-//             res.status(200).json(c.children);
-//         })
-//         .catch((error) => {
-//             next(error);
-//         });
-// };
-
-// exports.getTeacherByClassId = (req, res, next) => {
-//     const _id = req.params._id;
-//     Class.findById({ _id: _id })
-//         .then((c) => {
-//             if (!c) throw new Error("Id does not exist");
-//             res.status(200).json(c.supervisor);
-//         })
-//         .catch((error) => {
-//             next(error);
-//         });
-// };
+exports.classChildren = (req, res, next) => {
+    Class.findById(req.params["id"])
+        .populate("children")
+        .then((c) => {
+            if (!c) throw new Error("Id does not exist");
+            res.status(200).json(c.children);
+        })
+        .catch((error) => {
+            next(error);
+        });
+};
+exports.classSupervisor = (req, res, next) => {
+    Class.findById(req.params["id"])
+        .populate("supervisor")
+        .then((c) => {
+            if (!c) throw new Error("Id does not exist");
+            res.status(200).json(c.supervisor);
+        })
+        .catch((error) => {
+            next(error);
+        });
+};

@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-// const {autoInc} = require("auto-increment-group")
-
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 //schema creation
 
 // Define the Address sub-schema
@@ -21,12 +20,11 @@ const addressSchema = new mongoose.Schema({
   );
 
 // Define the Child schema with the updated structure
-const childSchema = new mongoose.Schema(
+const ChildSchema = new mongoose.Schema(
     {
         _id:{
             type : Number,
-            required:true,
-            index : true
+            unique:true
         },
       fullName: {
         type: String,
@@ -40,31 +38,22 @@ const childSchema = new mongoose.Schema(
         required: true,
         enum: ["PreKG", "KG1", "KG2"], // Level must be one of these values
       },
-      address: addressSchema, // Include Address as a sub-document 
+      address: addressSchema, // Include Address as a sub-document
+      
   image:{
     type: String ,
     required : true
   }
-    },
+    },{_id:false}
   );
   
     
     
 
 //create model
-const Child = mongoose.model('Child', childSchema);
 
 
-//auto increment
+ChildSchema.plugin(AutoIncrement, { id: "child_Id", inc_field: "_id" });
 
-// Schema.plugin(autoInc, {
-//     field: "_id",
-//     startAt: 1,
-//     unique: true
-// });
+module.exports = new mongoose.model("Child", ChildSchema);
 
-
-
-//export
-
-module.exports = Child;

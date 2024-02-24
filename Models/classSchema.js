@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const classSchema = new mongoose.Schema({
   _id:{
@@ -21,4 +22,7 @@ const classSchema = new mongoose.Schema({
 
 
 
-module.exports = mongoose.model('Class', classSchema);
+classSchema.plugin(AutoIncrement, { id: "class_Id", inc_field: "_id" });
+
+module.exports = new mongoose.model("Class", classSchema);
+

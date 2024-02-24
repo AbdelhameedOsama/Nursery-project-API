@@ -24,27 +24,26 @@ exports.getChildById=(req,res,next)=>{
     });
 }
 
-exports.insertChild=async (req,res,next)=>{
+exports.insertChild = (req, res, next) => {
     const imagePath = req.file.path;
-    const {_id, fullName, age, level,city,street,building } = req.body;
-    
-    const address={city,street,building}
-    try {
-      const child = new Child({
+    const { _id, fullName, age, level, city, street, building } = req.body;
+    const address = { city, street, building };
+    const child = new Child({
         _id,
         fullName,
         age,
         level,
         address,
         image: imagePath,
-      });
-      const newChildData = await child.save();
-      res.status(201).json({ newChildData, message: "Child added successfully" });
-    } catch (error) {
-      next(error);
-    }
+    });
+    child.save()
+        .then((newChildData) => {
+            res.status(201).json({ newChildData, message: "Child added successfully" });
+        })
+        .catch((error) => {
+            next(error);   
+        });
 }
-
 
 exports.updateChild = (req, res, next) => {
     const childId = req.body._id;
@@ -55,17 +54,12 @@ exports.updateChild = (req, res, next) => {
             if (!child) {
                 throw new Error("Child not found");
             }
-
-            // Delete the previous image file
             fs.unlink(child.image, (error) => {
                 if (error) {
                     console.error("Error deleting previous image:", error);
                 }
             });
-
-            // Update the child document with new image path
             child.image = imagePath;
-
             return child.save();
         })
         .then((updatedChild) => {
@@ -88,15 +82,11 @@ exports.deleteChild = (req, res, next) => {
             if (!child) {
                 throw new Error("Child not found");
             }
-
-            // Delete the image file
             fs.unlink(child.image, (error) => {
                 if (error) {
                     console.error("Error deleting image:", error);
                 }
             });
-
-            // Delete the child document
             return Child.findByIdAndDelete(childId);
         })
         .then((deletedChild) => {
@@ -109,3 +99,5 @@ exports.deleteChild = (req, res, next) => {
             next(error);
         });
 }
+
+
